@@ -1,0 +1,19 @@
+{
+  "name": "cs408-boiler-chess",
+  "version": "1.0.0",
+  "description": "Project Created for CS408 - Software Testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nzetzl/CS408Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nzetzl/CS408Project/issues"
+  },
+  "homepage": "https://github.com/nzetzl/CS408Project#readme"
+}
