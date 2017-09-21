@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" href="">
 
-  <!-- jquery from Google to improve load time -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- jQuery Stuff -->
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
 
-  <title>User Profile</title>
+  <!-- JS Script -->
+  <script src="login.js"></script>
+
+  <title>Create Profile</title>
 
   <!-- Bootstrap core CSS -->
-  <!-- TODO: Replace this w/ links to the "views" folder -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
-  <!-- Connect CSS page to hide ugle style stuff -->
-  <link rel="stylesheet" href="userProfile.css">
-  <script src='userProfile.js'></script>
+  <!-- Custom styles for this template -->
+  <style type="text/css">
+    body {
+      padding-top: 5rem;
+    }
+    
+    .starter-template {
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+  </style>
 </head>
 
 
@@ -34,8 +46,8 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Play</a>
         </li>
-        <li class="nav-item active ">
-          <a class="nav-link" href="#">Profile<span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Profile</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Current Games</a>
@@ -46,37 +58,26 @@
       </ul>
     </div>
   </nav>
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
   <div class="container">
-    <div class="row">
-      <div class="col-lg-3 col-sm-6">
-        <div class="card hovercard">
-          <div class="cardheader">
-          </div>
-          <div class="avatar">
-            <img alt="" src="https://images-na.ssl-images-amazon.com/images/I/31xX8v50oIL._SY355_.jpg">
-          </div>
-          <div class="info">
-            <div class="title">
-              <a target="_blank">UserName Here!</a>
-            </div>
-            <div class="title">
-              <span class="badge badge-warning"></span>
-            </div>
-            <div class="title">
-              <!-- TODO: Change color for badge-info -->
-              <span class="badge badge-info" href="#">SETTINGS</span>
-            </div>
-          </div>
-          <div class="bottom">
-          </div>
-        </div>
-
-      </div>
-
-    </div>
+    <!-- TODO: Integrate once backend is up -->
+    <form class="form-signin" id="signupForm" action="userProfile.html" onsubmit="return validateForm()" method="get">
+      <h2 class="form-signin-heading">Please Enter Your Information</h2>
+      
+      <!-- Currently Email is NOT required -->
+      <label for="email" class="sr-only">Email Address</label>
+      <input type="email" name="email" class="form-control" placeholder="You@Something.Any">
+      
+      <label for="username" class="sr-only">Username</label>
+      <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+      
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+      
+      <button class="btn btn-lg btn-primary" type="submit" value="submit">Create Profile</button>
+    </form>
   </div>
-  <!-- /.container -->
+  <!-- /container -->
 
 
   <!-- Bootstrap core JavaScript
@@ -105,4 +106,5 @@
   </script>
 
 </body>
+
 </html>

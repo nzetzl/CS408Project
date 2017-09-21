@@ -8,6 +8,10 @@
   <meta name="author" content="">
   <link rel="icon" href="">
 
+  <!-- jQuery Stuff -->
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+
   <!-- JS Script -->
   <script src="login.js"></script>
 
@@ -26,7 +30,6 @@
       padding: 3rem 1.5rem;
       text-align: center;
     }
-
   </style>
 </head>
 
@@ -58,18 +61,16 @@
 
   <div class="container">
     <!-- TODO: Integrate once backend is up -->
-    <form class="form-signin" name="login-form" action="userProfile.html" onsubmit="return validateForm()" method="get">
+    <form class="form-signin" id="signupForm" action="userProfile.html" onsubmit="return validateForm()" method="get">
       <h2 class="form-signin-heading">Please sign in</h2>
-      <label for="inputUsername" class="sr-only">Username</label>
-      <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-      <div class="checkbox">
-        <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
+      <label for="username" class="sr-only">Username</label>
+      <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+      <div>
+        <a href="createProfile.html">Create a Profile</a>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-primary" type="submit" value="submit">Sign in</button>
     </form>
   </div>
   <!-- /container -->
@@ -98,7 +99,6 @@
       }
 
     }())
-
   </script>
 
 </body>
