@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" href="">
 
-  <title>User Profile</title>
+  <!-- JS Script -->
+  <script src="login.js"></script>
+
+  <title>Log In</title>
 
   <!-- Bootstrap core CSS -->
-  <!-- TODO: Replace this w/ links to the "views" folder -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
-  <!-- Connect CSS page to hide ugle style stuff -->
-  <link rel="stylesheet" href="userProfile.css">
+  <!-- Custom styles for this template -->
+  <style type="text/css">
+    body {
+      padding-top: 5rem;
+    }
+    
+    .starter-template {
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+
+  </style>
 </head>
 
 
@@ -30,8 +43,8 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Play</a>
         </li>
-        <li class="nav-item active ">
-          <a class="nav-link" href="#">Profile<span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Profile</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Current Games</a>
@@ -42,37 +55,24 @@
       </ul>
     </div>
   </nav>
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
   <div class="container">
-    <div class="row">
-      <div class="col-lg-3 col-sm-6">
-        <div class="card hovercard">
-          <div class="cardheader">
-          </div>
-          <div class="avatar">
-            <img alt="" src="https://images-na.ssl-images-amazon.com/images/I/31xX8v50oIL._SY355_.jpg">
-          </div>
-          <div class="info">
-            <div class="title">
-              <a target="_blank">UserName Here!</a>
-            </div>
-            <div class="title">
-              <span class="badge badge-warning">ELO: ###</span>
-            </div>
-            <div class="title">
-              <!-- TODO: Change color for badge-info -->
-              <span class="badge badge-info" href="#">SETTINGS</span>
-            </div>
-          </div>
-          <div class="bottom">
-          </div>
-        </div>
-
+    <!-- TODO: Integrate once backend is up -->
+    <form class="form-signin" name="login-form" action="userProfile.html" onsubmit="return validateForm()" method="get">
+      <h2 class="form-signin-heading">Please sign in</h2>
+      <label for="inputUsername" class="sr-only">Username</label>
+      <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <div class="checkbox">
+        <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
       </div>
-
-    </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
   </div>
-  <!-- /.container -->
+  <!-- /container -->
 
 
   <!-- Bootstrap core JavaScript
@@ -98,7 +98,9 @@
       }
 
     }())
+
   </script>
 
 </body>
+
 </html>

@@ -2,6 +2,14 @@ body {
   padding-top: 5rem;
 }
 
+.nav-link a:hover {
+  background-color: goldenrod;
+}
+
+.badge-pill.badge-settings {
+  background-color: slategray;
+}
+
 .starter-template {
   padding: 3rem 1.5rem;
   text-align: center;
