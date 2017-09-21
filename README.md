@@ -1,2 +1,2 @@
 # CS408Project
-Online logic game for CS 408
+Online Chess game for CS 408
