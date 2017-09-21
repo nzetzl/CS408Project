@@ -1,8 +1,14 @@
 {
-  "name": "cs408-boiler-chess",
+  "name": "cs408project",
   "version": "1.0.0",
-  "description": "Project Created for CS408 - Software Testing",
+  "description": "Boiler Chess",
   "main": "index.js",
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "bootstrap": "3.3.7",
+    "jquery-validation": "1.17.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
