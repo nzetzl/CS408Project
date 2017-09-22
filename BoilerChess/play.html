@@ -1,88 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="icon" href="">
+<!doctype html>
+<html>
 
-  <!-- jquery from Google to improve load time -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>Play Random Computer Example</title>
+  <base href="http://chessboardjs.com/" />
 
-  <!-- ChessBoard.js stuff -->
-  <link rel="stylesheet" href="css/chessboard-0.3.0.min.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-  <script src="js/chessboard-0.3.0.min.js"></script>
-
-  <title>User Profile</title>
-
+  <link rel="stylesheet" href="css/chessboard.css" />
   <!-- Bootstrap core CSS -->
   <!-- TODO: Replace this w/ links to the "views" folder -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
+
+  <!-- Chessboard, Chess, and jQuery .js files -->
+  <script src="js/json3.min.js"></script>
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/chessboard.js"></script>
   <!-- Connect CSS page to hide ugle style stuff -->
   <link rel="stylesheet" href="userProfile.css">
   <script src='userProfile.js'></script>
 </head>
 
-
 <body>
-  <!-- NAV BAR. SHOULD BE ON EVERY PAGE. MAKE A NAVBAR FILE -->
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">Boiler Chess</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <!-- Gross breaks until i feel like changing the CSS -->
+  <br><br><br>
+  <!-- Include Chess.js and create the board -->
+  <script src="js/chess.js"></script>
+  <div id="board" style="width: 400px"></div>
+
+  <body>
+    <!-- NAV BAR. SHOULD BE ON EVERY PAGE. MAKE A NAVBAR FILE -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand" href="#">Boiler Chess</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Play<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Current Games</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Rankings</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="play.html">Play</a>
+          </li>
+          <li class="nav-item active ">
+            <a class="nav-link" href="userProfile.html">Profile<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Current Games</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Rankings</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- end example HTML --->
 
-  <div id="board1" style="width: 700px"></div>
-  <script>
-    var board1 = ChessBoard('board1', 'start');
-  </script>
+    <script>
+      var init = function() {
 
+        //--- start example JS ---
+        var board,
+          game = new Chess();
 
-  <!-- Bootstrap core JavaScript
-    ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+        // do not pick up pieces if the game is over
+        // only pick up pieces for White
+        var onDragStart = function(source, piece, position, orientation) {
+          if (game.in_checkmate() === true || game.in_draw() === true ||
+            piece.search(/^b/) !== -1) {
+            return false;
+          }
+        };
 
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script>
-    (function() {
-      'use strict'
+        var makeRandomMove = function() {
+          var possibleMoves = game.moves();
 
-      if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-        var msViewportStyle = document.createElement('style')
-        msViewportStyle.appendChild(
-          document.createTextNode(
-            '@-ms-viewport{width:auto!important}'
-          )
-        )
-        document.head.appendChild(msViewportStyle)
-      }
+          // game over
+          if (possibleMoves.length === 0) return;
 
-    }())
-  </script>
+          var randomIndex = Math.floor(Math.random() * possibleMoves.length);
+          game.move(possibleMoves[randomIndex]);
+          board.position(game.fen());
+        };
 
-</body>
+        var onDrop = function(source, target) {
+          // see if the move is legal
+          var move = game.move({
+            from: source,
+            to: target,
+            promotion: 'q' // NOTE: always promote to a queen for example simplicity
+          });
+
+          // illegal move
+          if (move === null) return 'snapback';
+
+          // make random legal move for black
+          window.setTimeout(makeRandomMove, 250);
+        };
+
+        // update the board position after the piece snap
+        // for castling, en passant, pawn promotion
+        var onSnapEnd = function() {
+          board.position(game.fen());
+        };
+
+        var cfg = {
+          draggable: true,
+          position: 'start',
+          onDragStart: onDragStart,
+          onDrop: onDrop,
+          onSnapEnd: onSnapEnd
+        };
+        board = ChessBoard('board', cfg);
+        //--- end example JS ---
+
+      }; // end init()
+      $(document).ready(init);
+
+    </script>
+  </body>
+
 </html>
