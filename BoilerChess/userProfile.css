@@ -2,10 +2,6 @@ body {
   padding-top: 5rem;
 }
 
-.nav-link a:hover {
-  background-color: goldenrod;
-}
-
 .badge-pill.badge-settings {
   background-color: slategray;
 }
