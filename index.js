@@ -5,8 +5,7 @@ var http = require('http').Server(app);
 var port = process.env.PORT || 4000;
 
 app.get('/', function(req, res) {
-//	res.sendFile(__dirname + '/BoilerChess/login.html');
-	res.send("print");
+	res.sendFile(__dirname + '/BoilerChess/login.html');
 });
 
 http.listen(port, function () {
