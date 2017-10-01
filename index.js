@@ -13,7 +13,6 @@ var sqlConfig = {
 	database: 'TestDB'
 }
 
-
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/BoilerChess/login.html');
 });
