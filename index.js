@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 app.use(express.static('public'));
 var http = require('http').Server(app);
-var port = 4000;
+var port = process.env.PORT || 4000;
 
 //sql setup
 var sql = require('mssql');
@@ -15,7 +15,6 @@ var sqlConfig = {
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/BoilerChess/login.html');
-
 });
 
 app.get('/createProfile.html', function(req, res) {
