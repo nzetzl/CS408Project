@@ -4,6 +4,15 @@ app.use(express.static('public'));
 var http = require('http').Server(app);
 var port = process.env.PORT || 4000;
 
+app.get('/', function(req, res) {
+	res.sendFile(__dirname + '/BoilerChess/login.html');
+});
+
+app.get('/createProfile.html', function(req, res) {
+	res.sendFile(__dirname + '/BoilerChess/createProfile.html');
+	
+});
+/*
 //sql setup
 var sql = require('mssql');
 var sqlConfig = {
@@ -13,20 +22,11 @@ var sqlConfig = {
 	database: 'TestDB'
 }
 
-app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/BoilerChess/login.html');
-});
-
-app.get('/createProfile.html', function(req, res) {
-	res.sendFile(__dirname + '/BoilerChess/createProfile.html');
-	
-});
-
 app.get('/userProfile.html', function(req, res) {
 	//TODO; implement authentication here
 	console.log("username: " + req.query.username + " \n");
 	console.log("pass: " + req.query.password + " \n");
-	/*var pass = "";
+	var pass = "";
 	var sqlConnection = new sql.Connection(webconfig, function(err) {
 		var request = new sql.Request(sqlConnection);
 		pass = request.query('SELECT password FROM UsersTable WHERE username = username');
@@ -36,9 +36,10 @@ app.get('/userProfile.html', function(req, res) {
 		res.sendFile(__dirname + '/BoilerChess/');
 	} else {
 		console.log("incorrect password\n");
-	}*/
+	}
 	res.sendFile(__dirname + '/BoilerChess/userProfile.html');
 });
+*/
 
 http.listen(port, function () {
 	console.log("using port # " + port + " \n");
