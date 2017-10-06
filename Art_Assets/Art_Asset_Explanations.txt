@@ -1,0 +1,14 @@
+EloContainer_RankedButton
+	- Contains the ELO of the player if signed in
+	- Contains "Log In" if player is not logged in
+	- Is placed in the middle of the Ranked Button 
+
+EloTab
+	- Below user profile picture on Profile page *see mock up in discord*
+
+Button_Profile
+	- For buttons underneath ELO Tab on the profile page
+	- Also used for "Resign" and "Offer Draw"
+
+StatsTable
+	- Where "Settings" is on the mockup, replace with stats table. This will go below the buttons.
