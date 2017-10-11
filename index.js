@@ -5,17 +5,43 @@ var bodyParser = require('body-parser')
 app.use(express.static('public'));
 var http = require('http').Server(app);
 var port = process.env.PORT || 4000;
+var loggedIn = 0; //using for testing, will implement a better check later;
 
 app.use(bodyParser.urlencoded({ extended: false }))
 var db = new sqlite3.Database(__dirname + '/db/user.db');
 
 app.get('/', function (req, res) {
+	console.log('get');
 	res.sendFile(__dirname + '/BoilerChess/login.html');
+});
+
+app.post('/', function (req, res) {
+	console.log('post');
+	let username = req.body.username;
+	let password = req.body.password;
+
+	//let query = 'SELECT COUNT(*) FROM (SELECT DISTINCT username, pass FROM USERS) WHERE username = \'' + username + '\' and pass = \'' + password + '\''; 
+	//let query = 'SELECT (DISTINCT username, pass) FROM USERS WHERE username = \'' + username + '\' and pass = \'' + password + '\''; 
+//	let query = 'SELECT username FROM USERS WHERE EXISTS (SELECT DISTINCT username = \'' + username + '\' and pass = \'' + password + '\')';
+	let query = 'SELECT username, pass FROM USERS WHERE username = \'' + username + '\' and pass = \'' + password + '\''; 
+	console.log(query);
+	db.each(query, (err, rows) => {
+		var c = 0; // boolean to check if result is in the database (sql COUNT didnt work)
+		if (err === null)
+			console.log('err: ' + err);
+			/*
+		rows.forEach((row) => {
+			console.log(row.username);
+			c = 1;
+			console.log(c);
+		});
+		*/
+		res.send(req.body);
+	});
 });
 
 app.get('/createProfile.html', function (req, res) {
 	res.sendFile(__dirname + '/BoilerChess/createProfile.html');
-
 });
 
 app.post('/createProfile.html', function (req, res) {
