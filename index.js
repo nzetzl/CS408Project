@@ -5,13 +5,11 @@ var bodyParser = require('body-parser')
 app.use(express.static('public'));
 var http = require('http').Server(app);
 var port = process.env.PORT || 4000;
-var loggedIn = 0; //using for testing, will implement a better check later;
 
 app.use(bodyParser.urlencoded({ extended: false }))
 var db = new sqlite3.Database(__dirname + '/db/user.db');
 
 app.get('/', function (req, res) {
-	console.log('get');
 	res.sendFile(__dirname + '/BoilerChess/login.html');
 });
 
@@ -32,6 +30,7 @@ app.post('/', function (req, res){
 
 app.get('/createProfile.html', function (req, res) {
 	res.sendFile(__dirname + '/BoilerChess/createProfile.html');
+
 });
 
 app.post('/createProfile.html', function (req, res) {
