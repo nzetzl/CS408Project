@@ -13,21 +13,6 @@ app.get('/', function (req, res) {
 	res.sendFile(__dirname + '/BoilerChess/login.html');
 });
 
-app.post('/', function (req, res){ 
-	console.log('post');
-	let username = req.body.username;
-	let password = req.body.password;
-	//let query = 'SELECT COUNT(*) FROM (SELECT DISTINCT username, pass FROM USERS) WHERE username = \'' + username + '\' and pass = \'' + password + '\''; 
-	//let query = 'SELECT (DISTINCT username, pass) FROM USERS WHERE username = \'' + username + '\' and pass = \'' + password + '\''; 
-	let query = 'SELECT username FROM USERS WHERE EXISTS (SELECT DISTINCT username = \'' + username + '\' and pass = \'' + password + '\')'; 
-	console.log(query);
-	db.all(query, (err, results) => {
-		if(err === null)
-			console.log('err: ' + err);
-			res.send(req.body);
-	})
-});
-
 app.get('/createProfile.html', function (req, res) {
 	res.sendFile(__dirname + '/BoilerChess/createProfile.html');
 
