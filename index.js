@@ -4,7 +4,7 @@ var sqlite3 = require('sqlite3').verbose();
 var app = express();
 var mongoose = require('mongoose');
 app.use(session({
-	secret: 'keyboard cat',
+	secret: 's3cr3t k3y',
 	resave: false,
 	saveUninitialized: true
   }))
@@ -16,8 +16,6 @@ var loggedIn = 0; //using for testing, will implement a better check later;
 
 app.use(bodyParser.urlencoded({ extended: false }))
 var db = new sqlite3.Database(__dirname + '/db/user.db');
-
-//app.use(session({ secret: 'this-is-a-secret-token', cookie: { maxAge: 60000 }}));
 
 
 app.get('/', function (req, res) {
