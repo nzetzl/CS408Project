@@ -1,5 +1,7 @@
 var messenger = null;
 
+var gameOver = false;
+
 var Files = ["a", "b", "c", "d", "e", "f", "g", "h"];
 var Ranks = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -18,6 +20,7 @@ function ChessPiece(name, color, location){
 	this.moveCount = 0;
 	this.alive = true;
 	this.img = new Image();
+	this.moveSet = [];
 }
 
 function initWhitePieces(){
@@ -191,10 +194,36 @@ function ChessMove(prevLocation, nextLocation){
 		}
 		return false;
 	};
-	//this.moveString = "" + turnCount + " " + this.prevLocation + " " + this.piece.color + " " + this.piece.name + " " + this.nextLocation;
+	this.getMoveString = function(){
+		var captureString = "to ";
+		if(this.isCapture() === true) captureString = "captures ";
+		return "" + (turnCount + 1)+ ": " + this.piece.color + " " + this.piece.name + " " + this.prevLocation + " " + captureString + this.nextLocation;
+	};
+}
+
+function getMoveFromString(moveString){
+	var prevLocation;
+	var nextLocation;
+	var words = moveString.split(" ");
+	prevLocation = words[3];
+	nextLocation = words[5];
+	return new ChessMove(prevLocation,nextLocation);
 }
 
 var moveHistory = [];
+
+function setBoardToTurn(turn){
+	if(gameOver === true){
+		var moves = [];
+		for(var i = 0; i < turn; i++){
+			moves.push(getMoveFromString(moveHistory[i]));
+		}
+		startNewGame();
+		for(var i = 0; i < moves.length; i++){
+			completeMove(moves[i]);
+		}
+	}
+}
 
 function ChessPlayer(name, color){
 	this.name = name;
@@ -211,14 +240,6 @@ function ChessPlayer(name, color){
 
 var whitePlayer = new ChessPlayer("white", "white");
 var blackPlayer = new ChessPlayer("black", "black");
-
-function highlightMoveSet(player){
-	if(player === null)return;
-	for(var i = 0;i < player.moveSet.length; i++){
-		highlightSquareByLocationName(player.moveSet[i].nextLocation);
-	}
-}
-
 
 
 function getMoveOffset(fileOffset, rankOffset, piece){
@@ -427,17 +448,7 @@ function getKingMoveSet(piece){
 	return moveSet;
 }
 
-function getMoveSet(piece){
-	if(piece === null)return null;
-	var moveSet = [];
-	if(piece.name === "pawn")moveSet = getPawnMoveSet(piece);
-	else if(piece.name === "knight")moveSet = getKnightMoveSet(piece);
-	else if(piece.name === "rook")moveSet = getRookMoveSet(piece);
-	else if(piece.name === "bishop")moveSet = getBishopMoveSet(piece);
-	else if(piece.name === "queen")moveSet = getQueenMoveSet(piece);
-	else if(piece.name === "king")moveSet = getKingMoveSet(piece);
-	return moveSet;
-}
+
 
 function movePiece(prevLocation, nextLocation){
 	var piece = getPieceByLocationName(prevLocation);
@@ -460,18 +471,25 @@ function movePiece(prevLocation, nextLocation){
 }
 
 function isInCheck(color){
+	
 	if(color === "white"){
 		for(var i = 0; i < blackPieces.length; i++){
-			var testMoveSet = getMoveSet(blackPieces[i]);
-			for(var j = 0; j < testMoveSet.length; j++){
-				if(testMoveSet[j].givesCheck())return true;
+			if(blackPieces[i].alive === true){
+				var testMoveSet = blackPieces[i].moveSet;
+				for(var j = 0; j < testMoveSet.length; j++){
+					if(testMoveSet[j].givesCheck()){
+						return true;
+					}
+				}
 			}
 		}
 	}else if(color === "black"){
 		for(var i = 0; i < whitePieces.length; i++){
-			var testMoveSet = getMoveSet(whitePieces[i]);
-			for(var j = 0; j < testMoveSet.length; j++){
-				if(testMoveSet[j].givesCheck())return true;
+			if(whitePieces[i].alive === true){
+				var testMoveSet = whitePieces[i].moveSet;
+				for(var j = 0; j < testMoveSet.length; j++){
+					if(testMoveSet[j].givesCheck())return true;
+				}
 			}
 		}
 	}
@@ -498,6 +516,7 @@ function capture(moveToAdd){
 	}
 }
 
+
 function tryMove(moveToTry){
 	if(moveToTry === null)return "invalid move";
 	var color = moveToTry.piece.color;
@@ -508,7 +527,12 @@ function tryMove(moveToTry){
 			capture(moveToTry);
 		}
 	}
-	if(movePiece(moveToTry.prevLocation,moveToTry.nextLocation) === false) return "invalid move";
+	if(movePiece(moveToTry.prevLocation,moveToTry.nextLocation) === false){
+		return "invalid move";
+	}
+	updateMoveSetColor(color);
+	if(color === "white")updateMoveSetColor("black");
+	else if(color === "black")updateMoveSetColor("white");
 	var incheck = isInCheck(color);
 	movePiece(moveToTry.nextLocation,moveToTry.prevLocation);
 	moveToTry.piece.moveCount -= 2;
@@ -516,123 +540,185 @@ function tryMove(moveToTry){
 			for(var i = 0; i < whitePieces.length;i++){
 				if(moveToTry.otherPiece !== null && whitePieces[i].location.name === moveToTry.otherPiece.location.name){
 					whitePieces[i].alive = true;
+					break;
 			}
 		}
 	}else if(color === "white"){
 			for(var i = 0; i < blackPieces.length;i++){
 				if(moveToTry.otherPiece !== null && blackPieces[i].location.name === moveToTry.otherPiece.location.name){
 					blackPieces[i].alive = true;
+					break;
 			}
 		}
 	}
+	updateMoveSetColor(color);
+	if(color === "white")updateMoveSetColor("black");
+	else if(color === "black")updateMoveSetColor("white");
 	if(incheck){
-		
 		return "in check"
 	}
 	return "valid move";
 	
 }
 
-
-
-function makeMove(moveToMake){
-	if(tryMove(moveToMake) !== "valid move")return false;
-	if(moveToMake.isCapture()){
-		capture(moveToMake);
-	}
-	movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
-	return true;
-}
-
-function isInCheckMate(color){
-	if(isInCheck(color) === false)return false;
+function getNumPossibleMoves(color){
+	var count = 0;
 	if(color === "white"){
-		for(var i = 0; i < blackPieces.length; i++){
-			var testMoveSet = getMoveSet(blackPieces[i]);
-			for(var j = 0; j < testMoveSet.length; j++){
-				var move = testMoveSet[j];
-				if(makeMove(move)){
-					for(var k = 0; k < blackPieces.length; k++){
-						var testMovSet = getMoveSet(blackPieces[k]);
-						for(var l = 0; l < testMovSet.length; l++){
-							var mov = testMovSet[l];
-							if(tryMove(mov) === "valid move")return false;
-						}		
-					}
-					movePiece(move.nextLocation,move.prevLocation);
-					move.piece.moveCount -= 2;
-					if(color === "black"){
-							for(var i = 0; i < whitePieces.length;i++){
-								if(move.otherPiece !== null && whitePieces[i].location.name === move.otherPiece.location.name){
-									whitePieces[i].alive = true;
-								}
-							}
-					}else if(color === "white"){
-						for(var i = 0; i < blackPieces.length;i++){
-							if(move.otherPiece !== null && blackPieces[i].location.name === move.otherPiece.location.name){
-								blackPieces[i].alive = true;
-							}
-						}
-					}
-					
+		for(var i = 0; i < whitePieces.length; i++){
+			if(whitePieces[i].alive === true){
+				for(var j = 0; j < whitePieces[i].moveSet.length; j++){
+					var tryMov = tryMove(whitePieces[i].moveSet[j]);
+					if(tryMov === "valid move" || tryMov === "gives check")count++;
 				}
 			}
 		}
 	}else if(color === "black"){
-		for(var i = 0; i < whitePieces.length; i++){
-			var testMoveSet = getMoveSet(whitePieces[i]);
-			for(var j = 0; j < testMoveSet.length; j++){
-				var move = testMoveSet[j];
-				if(makeMove(move)){
-					for(var k = 0; k < whitePieces.length; k++){
-						var testMovSet = getMoveSet(whitePieces[k]);
-						for(var l = 0; l < testMovSet.length; l++){
-							var mov = testMovSet[l];
-							if(tryMove(mov) === "valid move")return false;
-						}		
-					}
-					movePiece(move.nextLocation,move.prevLocation);
-					move.piece.moveCount -= 2;
-					if(color === "black"){
-							for(var i = 0; i < whitePieces.length;i++){
-								if(move.otherPiece !== null && whitePieces[i].location.name === move.otherPiece.location.name){
-									whitePieces[i].alive = true;
-								}
-							}
-					}else if(color === "white"){
-						for(var i = 0; i < blackPieces.length;i++){
-							if(move.otherPiece !== null && blackPieces[i].location.name === move.otherPiece.location.name){
-								blackPieces[i].alive = true;
-							}
-						}
-					}
-					
+		for(var i = 0; i < blackPieces.length; i++){
+			if(blackPieces[i].alive === true){
+				for(var j = 0; j < blackPieces[i].moveSet.length; j++){
+					var tryMov = tryMove(blackPieces[i].moveSet[j]);
+					if(tryMov === "valid move" || tryMov === "gives check")count++;
 				}
 			}
 		}
 	}
+	return count;
+}
+
+function highlightMoveSet(player){
+	if(player === null)return;
+	for(var i = 0;i < player.moveSet.length; i++){
+		var tryMov = tryMove(player.moveSet[i]);
+		if(tryMov === "valid move" || tryMov === "gives check")highlightSquareByLocationName(player.moveSet[i].nextLocation);
+		
+	}
+	
+}
+
+
+function getMoveSet(piece){
+	if(piece === null)return null;
+	var moveSet = [];
+	if(piece.name === "pawn")moveSet = getPawnMoveSet(piece);
+	else if(piece.name === "knight")moveSet = getKnightMoveSet(piece);
+	else if(piece.name === "rook")moveSet = getRookMoveSet(piece);
+	else if(piece.name === "bishop")moveSet = getBishopMoveSet(piece);
+	else if(piece.name === "queen")moveSet = getQueenMoveSet(piece);
+	else if(piece.name === "king")moveSet = getKingMoveSet(piece);
+	var i = 0;
+	
+	piece.moveSet = moveSet;
+	return moveSet;
+}
+
+function cleanMoveSet(piece){
+	var i = 0;
+	while(i < piece.moveSet.length){
+		if(piece.moveSet[i].valid == false){
+			piece.moveSet.splice(i,1);
+		}else i++;
+	}
+	
+}
+
+function updateMoveSetColor(color){
+	if(color === "white"){
+		for(var i = 0; i < whitePieces.length; i++){
+			if(whitePieces[i].alive === true)updateMoveSet(whitePieces[i]);
+		}
+	}else if(color === "black"){
+		for(var i = 0; i < blackPieces.length; i++){
+			if(blackPieces[i].alive === true)updateMoveSet(blackPieces[i]);
+		}
+	}
+}
+
+function updateMoveSet(piece){
+	if(piece === null)return;
+	if(piece.alive === true)getMoveSet(piece);
+}
+
+function promote(piece){
+	if(piece === null)return false;
+	var color = piece.color;
+	if(piece.name === "pawn"){
+		if(piece.color === "white"){
+			if(piece.location.rank === 8){
+				piece.name = "queen";
+				updateMoveSetColor(color);
+				if(color === "white")updateMoveSetColor("black");
+				else if(color === "black")updateMoveSetColor("white");
+				return true;
+			}
+		}else if(piece.color === "black"){
+			if(piece.location.rank === 1){
+				piece.name = "queen";
+				updateMoveSetColor(color);
+				if(color === "white")updateMoveSetColor("black");
+				else if(color === "black")updateMoveSetColor("white");
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function makeMove(moveToMake){
+	var tryMov = tryMove(moveToMake);
+	if(tryMov === "invalid move" || tryMov === "in check")return false;
+	if(moveToMake.isCapture()){
+		capture(moveToMake);
+	}
+	movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
+	promote(moveToMake.piece);
 	return true;
+}
+
+function canMove(color){
+	if(isInCheck(color) === true && getNumPossibleMoves(color) === 0)return "checkmate";
+	else if(isInCheck(color) === false && getNumPossibleMoves(color) === 0)return "stalemate";
+	else return "" + getNumPossibleMoves(color);
 }
 
 function completeMove(moveToAdd){
 	if(makeMove(moveToAdd) === false) return false;
-	moveHistory.push(moveToAdd);
+	moveHistory.push(moveToAdd.getMoveString());
 	turnCount++;
 	redrawLocationList.push(moveToAdd.prevLocation);
 	redrawLocationList.push(moveToAdd.nextLocation);
+	updateMoveSetColor(moveToAdd.piece.color);
+	if(moveToAdd.piece.color === "white")updateMoveSetColor("black");
+	else if(moveToAdd.piece.color === "black")updateMoveSetColor("white");
+	updateMoveSetColor("black");
+	window.console.log(moveHistory[turnCount - 1]);
 	if(moveToAdd.piece.color === "white"){
-		if(isInCheckMate("black")){
-			window.console.log("black in checkmate");
+		var moveString = canMove("black");
+		if(moveString === "checkmate"){
+			messenger.addMessageToSend("white wins!");
+			gameOver = true;
+			window.console.log("white wins!");
+		}else if(moveString === "stalemate"){
+			messenger.addMessageToSend("its a draw!");
+			gameOver = true;
+			window.console.log("its a draw!");
 		}else{
-			window.console.log("black not in checkmate");
+			messenger.addMessageToSend(moveToAdd.getMoveString());
 		}
 	}else if(moveToAdd.piece.color === "black"){
-		if(isInCheckMate("white")){
-			window.console.log("white in checkmate");
+		var moveString = canMove("white");
+		if(moveString === "checkmate"){
+				messenger.addMessageToSend("black wins!");
+				gameOver = true;
+				window.console.log("black wins!");
+		}else if(moveString === "stalemate"){
+			messenger.addMessageToSend("its a draw!");
+			gameOver = true;
+			window.console.log("its a draw!");
 		}else{
-			window.console.log("white not in checkmate");
+			messenger.addMessageToSend(moveToAdd.getMoveString());
 		}
 	}
+	
 	return true;
 }
 
@@ -708,18 +794,20 @@ function onClick(e){
 	if(whitePlayer.isTurn() === true){
 		for(var i = 0; i < whitePlayer.moveSet.length; i++){
 			if(whitePlayer.moveSet[i].nextLocation === getSquare(file, rank).location.name){
-				completeMove(whitePlayer.moveSet[i]);
-				whitePlayer.moveSet = [];
-				drawBoard();
+				if(completeMove(whitePlayer.moveSet[i]) === true){
+					whitePlayer.moveSet = [];
+					drawBoard();
+				}
 				return;
 			}
 		}
 	}else if(blackPlayer.isTurn() === true){
 		for(var i = 0; i < blackPlayer.moveSet.length; i++){
 			if(blackPlayer.moveSet[i].nextLocation === getSquare(file, rank).location.name){
-				completeMove(blackPlayer.moveSet[i]);
-				blackPlayer.moveSet = [];
-				drawBoard();
+				if(completeMove(blackPlayer.moveSet[i]) === true){
+					blackPlayer.moveSet = [];
+					drawBoard();
+				}
 				return;
 			}
 		}
@@ -728,10 +816,10 @@ function onClick(e){
 		return;
 	}
 	if(whitePlayer.isTurn() === true && piece.color === "white"){
-		whitePlayer.moveSet = getMoveSet(piece);
+		whitePlayer.moveSet = piece.moveSet;
 		highlightMoveSet(whitePlayer);
 	}else if(blackPlayer.isTurn() === true && piece.color === "black"){
-		blackPlayer.moveSet = getMoveSet(piece);
+		blackPlayer.moveSet = piece.moveSet;
 		highlightMoveSet(blackPlayer);
 	}
 	drawBoard();
@@ -741,6 +829,7 @@ canvas.addEventListener("click", onClick);
 
 function startNewGame(whitePlayerName, blackPlayerName, messenger_){
 	messenger = messenger_;
+	gameOver = false;
 	whitePlayer = new ChessPlayer(whitePlayerName, "white");
 	blackPlayer = new ChessPlayer(blackPlayerName, "black");
 	whitePieces = initWhitePieces();
@@ -749,6 +838,13 @@ function startNewGame(whitePlayerName, blackPlayerName, messenger_){
 	moveHistory = [];
 	turnCount = 0;
 	clearHighlights();
+	updateMoveSetColor("white");
+	updateMoveSetColor("black");
+	/*completeMove(getMoveFromString("1: white pawn f2 to f4"));
+	completeMove(getMoveFromString("1: white pawn f2 to f4"));
+	completeMove(getMoveFromString("1: white pawn f2 to f4"));
+	completeMove(getMoveFromString("1: white pawn f2 to f4"));
+	*/
 	drawBoard();
 	messenger.sendMessage(":CHAT:Game started between " + whitePlayerName + " and " + blackPlayerName + ". Good luck!");
 }

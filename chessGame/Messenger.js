@@ -9,7 +9,7 @@ function Messenger(){
 	this.messagesToSend = [];
 	this.messagesRecieved = [];
 	this.addMessageToSend = function(message){
-		if(typof message === "string"){
+		if(typeof message === "string"){
 			this.messagesToSend.push(message);
 		}
 	};
