@@ -4,6 +4,9 @@
 
 var data;
 
+var socket = io();
+
+
 function checkValid(data) {
   "use strict";
   if (data === 'Invalid Email.......') {
@@ -34,6 +37,11 @@ function checkValid(data) {
   }
 }
 $(document).ready(function () {
+  var c = document.getElementById("sub");
+
+  c.onclick = function (e) {
+    socket.emit('message', 'pls work');
+  }
   "use strict";
   $("#login").click(function () {
     var email, password;

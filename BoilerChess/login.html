@@ -2,18 +2,19 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" href="">
 
   <!-- jQuery Stuff -->
-  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
 
   <!-- JS Script -->
-  <script src="login.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  <script type="text/javascript" src="login.js"></script>
 
   <title>Log In</title>
 
@@ -61,7 +62,7 @@
 
   <div class="container">
     <!-- TODO: Integrate once backend is up -->
-    <form class="form-signin" id="signupForm" action="" onsubmit="return validateForm()" method="post">
+    <form class="form-signin" id="signupForm" action="" method="post">
       <h2 class="form-signin-heading">Please sign in</h2>
       <label for="username" class="sr-only">Username</label>
       <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
@@ -70,7 +71,7 @@
       <div>
         <a href="createProfile.html">Create a Profile</a>
       </div>
-      <button class="btn btn-lg btn-primary" type="submit" value="submit">Sign in</button>
+      <button class="btn btn-lg btn-primary" type="submit" value="submit" id="sub">Sign in</button>
     </form>
   </div>
   <!-- /container -->
