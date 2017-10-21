@@ -3,8 +3,6 @@ var session = require('express-session')
 var sqlite3 = require('sqlite3').verbose();
 var app = express();
 var http = require('http').createServer(app);
-//var server = require('http').createServer(app); 
-var mongoose = require('mongoose');
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 app.use(express.static(__dirname + '/BoilerChess'));
