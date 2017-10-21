@@ -2,21 +2,33 @@ var express = require('express');
 var session = require('express-session')
 var sqlite3 = require('sqlite3').verbose();
 var app = express();
+var http = require('http').createServer(app);
+//var server = require('http').createServer(app); 
 var mongoose = require('mongoose');
+var io = require('socket.io')(http);
+var bodyParser = require('body-parser');
+app.use(express.static(__dirname + '/BoilerChess'));
+app.use(express.static(__dirname + '/node_modules/socket.io/lib'));
+var port = process.env.PORT || 4000;
+var loggedIn = 0; //using for testing, will implement a better check later;
+
 app.use(session({
 	secret: 's3cr3t k3y',
 	resave: false,
 	saveUninitialized: true
-  }))
-var bodyParser = require('body-parser')
-app.use(express.static('public'));
-var http = require('http').Server(app);
-var port = process.env.PORT || 4000;
-var loggedIn = 0; //using for testing, will implement a better check later;
+  }));
+
 
 app.use(bodyParser.urlencoded({ extended: false }))
 var db = new sqlite3.Database(__dirname + '/db/user.db');
 
+io.on('connection', function(socket) {
+    console.log('New connection');
+
+    socket.on('message', function(msg) {
+        console.log('Got message from client: ' + msg);
+    })
+});
 
 app.get('/', function (req, res) {
 	console.log('get');
