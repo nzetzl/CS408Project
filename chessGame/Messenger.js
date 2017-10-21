@@ -4,7 +4,7 @@
 //":CHAT:Hello there my good opponent." starting the string with :CHAT: will send the remaining string to the opponents chatbox
 //":MOVE:movestring" starting the string with :MOVE: will send the rest of the string to the opponents move history.
 
-class Messenger(){
+class Messenger {
 	
 	constructor() {
 		var url = "/messages";
@@ -13,20 +13,20 @@ class Messenger(){
 		this.messagesRecieved = [];
 	}
 
-	this.addMessageToSend(message) {
+	addMessageToSend(message) {
 		if(typeof message === "string"){
 			this.messagesToSend.push(message);
 		}
 	}
 
-	this.sendMessage() {
+	sendMessage() {
 		//TODO
 		var http = new XMLHTTPRequest();
 		http.open("POST", url, true);
 		http.send(messagesToSend.toString());
 		//http.send("Test");
 	};
-	this.receiveMessage() {
+	receiveMessage() {
 		//TODO
 		var http = new XMLHTTPRequest();
 		http.open('GET', url, true);
