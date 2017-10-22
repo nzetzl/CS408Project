@@ -1,5 +1,5 @@
 var messenger = null;
-
+var socket = io();
 var gameOver = false;
 
 var Files = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -8,7 +8,7 @@ var Ranks = [1, 2, 3, 4, 5, 6, 7, 8];
 var redrawLocationList = [];
 //use location values to compare not the actual location object!!!!!!
 function Location(file, rank){
-	this.file = file;
+
 	this.rank = rank;
 	this.name = "" + Files[this.file - 1] + Ranks[this.rank - 1];
 }
@@ -534,7 +534,8 @@ function tryMove(moveToTry){
 	if(color === "white")updateMoveSetColor("black");
 	else if(color === "black")updateMoveSetColor("white");
 	var incheck = isInCheck(color);
-	movePiece(moveToTry.nextLocation,moveToTry.prevLocation);
+	var sockMove = movePiece(moveToTry.nextLocation,moveToTry.prevLocation);
+	socket.emit('move', sockMove);
 	moveToTry.piece.moveCount -= 2;
 	if(color === "black"){
 			for(var i = 0; i < whitePieces.length;i++){
@@ -669,7 +670,7 @@ function makeMove(moveToMake){
 	if(moveToMake.isCapture()){
 		capture(moveToMake);
 	}
-	movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
+	var sockMove = movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
 	promote(moveToMake.piece);
 	return true;
 }
@@ -848,3 +849,6 @@ function startNewGame(whitePlayerName, blackPlayerName, messenger_){
 	drawBoard();
 	messenger.sendMessage(":CHAT:Game started between " + whitePlayerName + " and " + blackPlayerName + ". Good luck!");
 }
+socket.on('move', function(msg){
+	msg;
+});

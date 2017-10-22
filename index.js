@@ -6,7 +6,7 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 app.use(express.static(__dirname + '/BoilerChess'));
-app.use(express.static(__dirname + '/node_modules/socket.io/lib'));
+app.use(express.static(__dirname + '/chessGame'));
 var port = process.env.PORT || 4000;
 var loggedIn = 0; //using for testing, will implement a better check later;
 
@@ -25,7 +25,10 @@ io.on('connection', function(socket) {
 
     socket.on('message', function(msg) {
         console.log('Got message from client: ' + msg);
-    })
+	})
+    socket.on('move', function(msg) {
+		socket.broadcast.emit('move', msg);
+    });
 });
 
 app.get('/', function (req, res) {
@@ -62,6 +65,10 @@ app.post('/', function (req, res) {
 
 app.get('/createProfile.html', function (req, res) {
 	res.sendFile(__dirname + '/BoilerChess/createProfile.html');
+});
+
+app.post('/userProfile.html', function (req, res) {
+	res.sendFile(__dirname + "/chessGame/gamepage.html");
 });
 
 app.post('/createProfile.html', function (req, res) {
