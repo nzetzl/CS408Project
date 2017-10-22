@@ -1,5 +1,5 @@
 var messenger = null;
-var socket = io();
+//var socket = io();
 var gameOver = false;
 
 var Files = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -534,8 +534,9 @@ function tryMove(moveToTry){
 	if(color === "white")updateMoveSetColor("black");
 	else if(color === "black")updateMoveSetColor("white");
 	var incheck = isInCheck(color);
-	var sockMove = movePiece(moveToTry.nextLocation,moveToTry.prevLocation);
-	socket.emit('move', sockMove);
+	//var sockMove = movePiece(moveToTry.nextLocation,moveToTry.prevLocation);
+	//socket.emit('move', sockMove);
+	movePiece(moveToTry.nextLocation,moveToTry.prevLocation);
 	moveToTry.piece.moveCount -= 2;
 	if(color === "black"){
 			for(var i = 0; i < whitePieces.length;i++){
@@ -670,7 +671,9 @@ function makeMove(moveToMake){
 	if(moveToMake.isCapture()){
 		capture(moveToMake);
 	}
-	var sockMove = movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
+	//var sockMove = movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
+	//socket.emit('move', sockMove);
+	movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
 	promote(moveToMake.piece);
 	return true;
 }
