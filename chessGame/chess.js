@@ -829,7 +829,8 @@ function onClick(e){
 canvas.addEventListener("click", onClick);
 
 function startNewGame(whitePlayerName, blackPlayerName, messenger_){
-	messenger = messenger_;
+	console.log('trying to start game');
+	//messenger = messenger_;
 	gameOver = false;
 	whitePlayer = new ChessPlayer(whitePlayerName, "white");
 	blackPlayer = new ChessPlayer(blackPlayerName, "black");
@@ -847,8 +848,10 @@ function startNewGame(whitePlayerName, blackPlayerName, messenger_){
 	completeMove(getMoveFromString("1: white pawn f2 to f4"));
 	*/
 	drawBoard();
-	messenger.sendMessage(":CHAT:Game started between " + whitePlayerName + " and " + blackPlayerName + ". Good luck!");
+	//messenger.sendMessage(":CHAT:Game started between " + whitePlayerName + " and " + blackPlayerName + ". Good luck!");
 }
+/*
 socket.on('move', function(msg){
 	msg;
 });
+*/

@@ -5,6 +5,7 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
+var dir = __dirname;
 app.use(express.static(__dirname + '/BoilerChess'));
 app.use(express.static(__dirname + '/chessGame'));
 var port = process.env.PORT || 4000;
@@ -14,30 +15,30 @@ app.use(session({
 	secret: 's3cr3t k3y',
 	resave: false,
 	saveUninitialized: true
-  }));
+}));
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
 var db = new sqlite3.Database(__dirname + '/db/user.db');
 
-io.on('connection', function(socket) {
-    console.log('New connection');
+io.on('connection', function (socket) {
+	console.log('New connection');
 
-    socket.on('message', function(msg) {
-        console.log('Got message from client: ' + msg);
+	socket.on('message', function (msg) {
+		console.log('Got message from client: ' + msg);
 	})
-    socket.on('move', function(msg) {
+	socket.on('move', function (msg) {
 		socket.broadcast.emit('move', msg);
-    });
+	});
 });
 
 app.get('/', function (req, res) {
 	console.log('get');
-	res.sendFile(__dirname + '/BoilerChess/login.html');
+	res.sendFile(dir + '/BoilerChess/login.html');
 });
 
 app.get('/userProfile.html', checkAuth, function (req, res) {
-	res.sendFile(__dirname + '/BoilerChess/userProfile.html');
+	res.sendFile(dir + '/BoilerChess/userProfile.html');
 });
 
 app.post('/', function (req, res) {
@@ -56,19 +57,23 @@ app.post('/', function (req, res) {
 			c = 1;
 			console.log(c);
 			req.session.user_id = username;
-			res.redirect('/userProfile.html');
+			res.sendFile(dir + "/chessGame/gamepage.html");
+			//res.redirect('/userProfile.html');
 		});
-		if(c == 0)
+		if (c == 0)
 			res.send('Username or password invalid');
 	});
 });
 
 app.get('/createProfile.html', function (req, res) {
-	res.sendFile(__dirname + '/BoilerChess/createProfile.html');
+	res.sendFile(dir + '/BoilerChess/createProfile.html');
 });
 
 app.post('/userProfile.html', function (req, res) {
-	res.sendFile(__dirname + "/chessGame/gamepage.html");
+	console.log('oging into gamepage');
+	console.log(dir);
+	res.sendFile(dir + "/chessGame/gamepage.html");
+
 });
 
 app.post('/createProfile.html', function (req, res) {
@@ -84,16 +89,16 @@ app.post('/createProfile.html', function (req, res) {
 });
 
 app.get('/play.html', function (req, res) {
-	res.sendFile(__dirname + '/BoilerChess/play.html');
+	res.sendFile(dir + '/BoilerChess/play.html');
 });
 
 function checkAuth(req, res, next) {
 	if (!req.session.user_id) {
-	  res.send('You are not authorized to view this page');
+		res.send('You are not authorized to view this page');
 	} else {
-	  next();
+		next();
 	}
-  }
+}
 
 http.listen(port, function () {
 	console.log("using port # " + port + " \n");

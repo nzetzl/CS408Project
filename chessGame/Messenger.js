@@ -20,16 +20,17 @@ class Messenger {
 	}
 
 	sendMessage() {
+		console.log('in htis');
 		//TODO
-		var http = new XMLHTTPRequest();
-		http.open("POST", url, true);
-		http.send(messagesToSend.toString());
+	//	var http = new XMLHTTPRequest();
+	//	http.open("POST", url, true);
+		//http.send(messagesToSend.toString());
 		//http.send("Test");
 	};
 	receiveMessage() {
 		//TODO
-		var http = new XMLHTTPRequest();
-		http.open('GET', url, true);
-		http.send();
+	//	var http = new XMLHTTPRequest();
+		//http.open('GET', url, true);
+		//http.send();
 	};
 }
