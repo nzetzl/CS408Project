@@ -28,12 +28,15 @@ io.on('connection', function (socket) {
 		console.log('Got message from client: ' + msg);
 	})
 	socket.on('move', function (msg) {
+		console.log('emit broadcast');
 		socket.broadcast.emit('move', msg);
 	});
 });
 
 app.get('/', function (req, res) {
 	console.log('get');
+
+	//res.sendFile(dir + "/chessGame/gamepage.html");
 	res.sendFile(dir + '/BoilerChess/login.html');
 });
 
@@ -57,8 +60,8 @@ app.post('/', function (req, res) {
 			c = 1;
 			console.log(c);
 			req.session.user_id = username;
-			res.sendFile(dir + "/chessGame/gamepage.html");
-			//res.redirect('/userProfile.html');
+			//res.sendFile(dir + "/chessGame/gamepage.html");
+			res.redirect('/userProfile.html');
 		});
 		if (c == 0)
 			res.send('Username or password invalid');
@@ -70,8 +73,6 @@ app.get('/createProfile.html', function (req, res) {
 });
 
 app.post('/userProfile.html', function (req, res) {
-	console.log('oging into gamepage');
-	console.log(dir);
 	res.sendFile(dir + "/chessGame/gamepage.html");
 
 });
