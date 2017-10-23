@@ -4,10 +4,10 @@ var sqlite3 = require('sqlite3').verbose();
 var app = express();
 var http = require('http').createServer(app);
 //var server = require('http').createServer(app); 
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
-app.use(express.static(__dirname + '/BoilerChess'));
+app.use(express.static(__dirname + '/'));
 app.use(express.static(__dirname + '/node_modules/socket.io/lib'));
 var port = process.env.PORT || 4000;
 var loggedIn = 0; //using for testing, will implement a better check later;
@@ -27,6 +27,10 @@ io.on('connection', function(socket) {
 
     socket.on('message', function(msg) {
         console.log('Got message from client: ' + msg);
+    })
+
+    socket.on('move', function(msg) {
+        console.log('Got move from client: ' + msg);
     })
 });
 

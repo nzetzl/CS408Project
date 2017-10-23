@@ -14,7 +14,8 @@
 
   <!-- JS Script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-  <script type="text/javascript" src="login.js"></script>
+  <script type="text/javascript" src="./login.js"></script>
+  <script type="text/javascript" src="../chessGame/Messenger.js"></script>
 
   <title>Log In</title>
 
@@ -36,6 +37,12 @@
 
 
 <body>
+
+	<script type="text/javascript">
+		var messenger = new Messenger();
+		messenger.addMessageToSend("hello, friend");
+		messenger.sendMessage();
+	</script>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#">Boiler Chess</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">

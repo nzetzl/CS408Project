@@ -11,6 +11,7 @@ class Messenger(){
 		this.messagesSent = [];
 		this.messagesToSend = [];
 		this.messagesRecieved = [];
+		this.socket = io();
 	}
 
 	this.addMessageToSend(message) {
@@ -21,15 +22,9 @@ class Messenger(){
 
 	this.sendMessage() {
 		//TODO
-		var http = new XMLHTTPRequest();
-		http.open("POST", url, true);
-		http.send(messagesToSend.toString());
-		//http.send("Test");
+		this.socket.emit(this.messagesToSend.toString());
 	};
 	this.receiveMessage() {
 		//TODO
-		var http = new XMLHTTPRequest();
-		http.open('GET', url, true);
-		http.send();
 	};
 }
