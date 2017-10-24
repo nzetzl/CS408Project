@@ -7,7 +7,8 @@ var http = require('http').createServer(app);
 //var mongoose = require('mongoose');
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/BoilerChess'));
+app.use(express.static(__dirname + '/chessGame'));
 app.use(express.static(__dirname + '/node_modules/socket.io/lib'));
 var port = process.env.PORT || 4000;
 var loggedIn = 0; //using for testing, will implement a better check later;
@@ -31,8 +32,12 @@ io.on('connection', function(socket) {
 
     socket.on('move', function(msg) {
         console.log('Got move from client: ' + msg);
+		//TODO: add move to database
+		//let query = 'INSTERT INTO USERS (username) VALUES (\'' + msg + '\')';
     })
 });
+
+//TODO: add route to get user back to login after creating a user profile
 
 app.get('/', function (req, res) {
 	console.log('get');
@@ -78,8 +83,8 @@ app.post('/createProfile.html', function (req, res) {
 	db.run(sql, (err, results) => {
 		console.log('err: ' + err)
 		console.log(req.body.username);
-		res.send(req.body);
 	})
+	res.redirect('/');
 });
 
 app.get('/play.html', function (req, res) {
