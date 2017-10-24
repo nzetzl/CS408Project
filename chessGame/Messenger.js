@@ -21,10 +21,13 @@ class Messenger {
 	}
 
 	sendMessage() {
-		//TODO
+		//console.log('in htis');
 		this.socket.emit(this.messagesToSend.toString());
 	};
 	receiveMessage() {
 		//TODO
+	//	var http = new XMLHTTPRequest();
+		//http.open('GET', url, true);
+		//http.send();
 	};
 }

@@ -1,9 +1,10 @@
 var messenger = null;
-
+var socket = io();
 var gameOver = false;
 
 var Files = ["a", "b", "c", "d", "e", "f", "g", "h"];
 var Ranks = [1, 2, 3, 4, 5, 6, 7, 8];
+var updateBoardPiece = [];
 
 var redrawLocationList = [];
 //use location values to compare not the actual location object!!!!!!
@@ -184,6 +185,8 @@ function ChessMove(prevLocation, nextLocation){
 	this.nextLocation = nextLocation;
 	this.piece = getPieceByLocationName(this.prevLocation);
 	this.otherPiece = getPieceByLocationName(this.nextLocation);
+//	console.log('color 1: ' + this.piece.color);
+//	console.log('color 2: ' + this.otherPiece.color);
 	this.isCapture = function(){
 		if(this.otherPiece !== null && this.piece !== null && this.piece.color !== this.otherPiece.color )return true;
 		return false;
@@ -534,6 +537,9 @@ function tryMove(moveToTry){
 	if(color === "white")updateMoveSetColor("black");
 	else if(color === "black")updateMoveSetColor("white");
 	var incheck = isInCheck(color);
+	updateBoardPiece[0] = moveToTry.nextLocation;
+	updateBoardPiece[1] = moveToTry.prevLocation;
+	//socket.emit('move', updateBoardPiece);
 	movePiece(moveToTry.nextLocation,moveToTry.prevLocation);
 	moveToTry.piece.moveCount -= 2;
 	if(color === "black"){
@@ -669,6 +675,9 @@ function makeMove(moveToMake){
 	if(moveToMake.isCapture()){
 		capture(moveToMake);
 	}
+	updateBoardPiece[0] = moveToMake.prevLocation;
+	updateBoardPiece[1] = moveToMake.nextLocation;
+	socket.emit('move', updateBoardPiece);
 	movePiece(moveToMake.prevLocation,moveToMake.nextLocation);
 	promote(moveToMake.piece);
 	return true;
@@ -682,6 +691,7 @@ function canMove(color){
 
 function completeMove(moveToAdd){
 	if(makeMove(moveToAdd) === false) return false;
+	//socket.emit('move', {});
 	moveHistory.push(moveToAdd.getMoveString());
 	turnCount++;
 	redrawLocationList.push(moveToAdd.prevLocation);
@@ -718,7 +728,8 @@ function completeMove(moveToAdd){
 			messenger.addMessageToSend(moveToAdd.getMoveString());
 		}
 	}
-	
+
+
 	return true;
 }
 
@@ -840,11 +851,23 @@ function startNewGame(whitePlayerName, blackPlayerName, messenger_){
 	clearHighlights();
 	updateMoveSetColor("white");
 	updateMoveSetColor("black");
-	/*completeMove(getMoveFromString("1: white pawn f2 to f4"));
+	drawBoard();
+	//completeMove(getMoveFromString("2: black knight g8 to f6"));
+	/*
 	completeMove(getMoveFromString("1: white pawn f2 to f4"));
 	completeMove(getMoveFromString("1: white pawn f2 to f4"));
 	completeMove(getMoveFromString("1: white pawn f2 to f4"));
 	*/
-	drawBoard();
-	messenger.sendMessage(":CHAT:Game started between " + whitePlayerName + " and " + blackPlayerName + ". Good luck!");
+	//drawBoard();
+	//messenger.sendMessage(":CHAT:Game started between " + whitePlayerName + " and " + blackPlayerName + ". Good luck!");
 }
+function updateNewBoard(from, to) {
+	movePiece(from, to);
+	redrawLocationList.push(from);
+	redrawLocationList.push(to);
+	turnCount+=1;
+	drawBoard();
+}
+socket.on('move', function(msg){
+	updateNewBoard(msg[0], msg[1]);
+});

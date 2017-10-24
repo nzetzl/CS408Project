@@ -1,1 +1,1 @@
-document.getElementById("userELO").innerHTML = "ELO: 1000";
+//document.getElementById("userELO").innerHTML = "ELO: 1000";
