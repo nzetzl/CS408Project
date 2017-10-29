@@ -317,7 +317,7 @@ function getKnightMoveSet(piece){
 	if(tempMove !== null){
 		moveSet.push(tempMove);
 	}
-	tempMove = getMoveOffset(-1,2,piece);
+	tempMove = getMoveOffset(-1,-2,piece);
 	if(tempMove !== null){
 		moveSet.push(tempMove);
 	}
@@ -350,7 +350,7 @@ function getRookMoveSet(piece){
 	var i = 1;
 	while((tempMove = getMoveOffset(i++,0,piece)) !== null){
 		moveSet.push(tempMove);
-		if(tempMove.isCapture() === true)break;
+		if(tempMove.isCapture() === true);
 	}
 	i = -1;
 	while((tempMove = getMoveOffset(i--,0,piece)) !== null){
@@ -374,7 +374,7 @@ function getBishopMoveSet(piece){
 	var moveSet = [];
 	var tempMove;
 	var i = 1;
-	var j = 1;
+	var j = 0;
 	while((tempMove = getMoveOffset(i++,j++,piece)) !== null){
 		moveSet.push(tempMove);
 		if(tempMove.isCapture() === true)break;
@@ -649,7 +649,7 @@ function promote(piece){
 	var color = piece.color;
 	if(piece.name === "pawn"){
 		if(piece.color === "white"){
-			if(piece.location.rank === 8){
+			if(piece.location.rank === 1){
 				piece.name = "queen";
 				updateMoveSetColor(color);
 				if(color === "white")updateMoveSetColor("black");
@@ -684,7 +684,7 @@ function makeMove(moveToMake){
 }
 
 function canMove(color){
-	if(isInCheck(color) === true && getNumPossibleMoves(color) === 0)return "checkmate";
+	if(getNumPossibleMoves(color) === 0)return "checkmate";
 	else if(isInCheck(color) === false && getNumPossibleMoves(color) === 0)return "stalemate";
 	else return "" + getNumPossibleMoves(color);
 }
@@ -852,14 +852,7 @@ function startNewGame(whitePlayerName, blackPlayerName, messenger_){
 	updateMoveSetColor("white");
 	updateMoveSetColor("black");
 	drawBoard();
-	//completeMove(getMoveFromString("2: black knight g8 to f6"));
-	/*
-	completeMove(getMoveFromString("1: white pawn f2 to f4"));
-	completeMove(getMoveFromString("1: white pawn f2 to f4"));
-	completeMove(getMoveFromString("1: white pawn f2 to f4"));
-	*/
-	//drawBoard();
-	//messenger.sendMessage(":CHAT:Game started between " + whitePlayerName + " and " + blackPlayerName + ". Good luck!");
+	
 }
 function updateNewBoard(from, to) {
 	movePiece(from, to);
