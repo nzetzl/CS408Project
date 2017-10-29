@@ -1,0 +1,10 @@
+1.White piece won't promote.
+In promote() check if rank is 8 for white piece instead of 1.
+2.Knight can't move up 2 and left 1.
+Change the 3rd move offset in getKnightMoveset() to -1,2 from -1,-2.
+3.Rooks can move through pieces going right.
+Add a break inside the if statement in the first while loop of getRookMoveset().
+4.Bishop can move one to the right.
+Change the first value j is assigned from 0 to 1 in getBishopMoveset().
+5.Can be checkmated while not in check.
+Make sure isInCheck returns true while checking for checkmate in canMove().
