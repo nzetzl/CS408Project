@@ -40,7 +40,6 @@ function initWhitePieces(){
 	new ChessPiece("queen", "white", new Location(4,1)),
 	new ChessPiece("king", "white", new Location(5,1)),
 	new ChessPiece("bishop", "white", new Location(6,1)),
-	new ChessPiece("knight", "white", new Location(7,1)),
 	new ChessPiece("rook", "white", new Location(8,1))
 	];
 	return whitePieces;
@@ -63,7 +62,7 @@ function initBlackPieces(){
 	new ChessPiece("king", "black", new Location(5,8)),
 	new ChessPiece("bishop", "black", new Location(6,8)),
 	new ChessPiece("knight", "black", new Location(7,8)),
-	new ChessPiece("rook", "black", new Location(8,8))
+	new ChessPiece("knight", "black", new Location(8,8))
 	];
 	return blackPieces;
 }
@@ -828,7 +827,6 @@ function onClick(e){
 	}
 	if(whitePlayer.isTurn() === true && piece.color === "white"){
 		whitePlayer.moveSet = piece.moveSet;
-		highlightMoveSet(whitePlayer);
 	}else if(blackPlayer.isTurn() === true && piece.color === "black"){
 		blackPlayer.moveSet = piece.moveSet;
 		highlightMoveSet(blackPlayer);
@@ -851,6 +849,7 @@ function startNewGame(whitePlayerName, blackPlayerName, messenger_){
 	clearHighlights();
 	updateMoveSetColor("white");
 	updateMoveSetColor("black");
+	completeMove(getMoveFromString("2: black knight g8 to f6"));
 	drawBoard();
 	
 }
