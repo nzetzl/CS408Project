@@ -46,7 +46,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/userProfile.html', checkAuth, function (req, res) {
-	res.sendFile(dir + '/BoilerChess/userProfile.html');
+	res.sendFile(dir + '/userProfile.html');
 });
 
 app.post('/', function (req, res) {
