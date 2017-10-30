@@ -8,9 +8,8 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var dir = __dirname;
-app.use(express.static(__dirname + '/BoilerChess'));
-app.use(express.static(__dirname + '/chessGame'));
 app.use(express.static(__dirname + '/node_modules/socket.io/lib'));
+app.use(express.static(__dirname + '/chessGame'));
 var port = process.env.PORT || 4000;
 var loggedIn = 0; //using for testing, will implement a better check later;
 
@@ -65,19 +64,15 @@ app.post('/', function (req, res) {
 			c = 1;
 			console.log(c);
 			req.session.user_id = username;
-			//res.sendFile(dir + "/chessGame/gamepage.html");
-			res.redirect('/userProfile.html');
+			res.send('Username or password invalid');
 		});
 		if (c == 0)
 			res.send('Username or password invalid');
 	});
 });
 
-app.get('/createProfile.html', function (req, res) {
-	res.sendFile(dir + '/BoilerChess/createProfile.html');
-});
 
-app.post('/userProfile.html', function (req, res) {
+app.post('/userProfile.html', checkAuth, function (req, res) {
 	res.sendFile(dir + "/chessGame/gamepage.html");
 
 });
