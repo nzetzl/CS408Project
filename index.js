@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var dir = __dirname;
 app.use(express.static(__dirname + '/node_modules/socket.io/lib'));
 app.use(express.static(__dirname + '/chessGame'));
+app.use(express.static(__dirname + '/BoilerChess'));
 var port = process.env.PORT || 4000;
 var loggedIn = 0; //using for testing, will implement a better check later;
 
@@ -44,7 +45,7 @@ app.get('/', function (req, res) {
 	res.sendFile(dir + '/BoilerChess/login.html');
 });
 
-app.get('/userProfile.html', checkAuth, function (req, res) {
+app.get('/userProfile.html', function (req, res) {
 	res.sendFile(dir + '/userProfile.html');
 });
 
@@ -72,7 +73,7 @@ app.post('/', function (req, res) {
 });
 
 
-app.post('/userProfile.html', checkAuth, function (req, res) {
+app.post('/userProfile.html', function (req, res) {
 	res.sendFile(dir + "/chessGame/gamepage.html");
 
 });
@@ -90,7 +91,7 @@ app.post('/createProfile.html', function (req, res) {
 });
 
 app.get('/play.html', function (req, res) {
-	res.sendFile(dir + '/BoilerChess/play.html');
+	res.sendFile(dir + '/chessGame/play.html');
 });
 
 function checkAuth(req, res, next) {

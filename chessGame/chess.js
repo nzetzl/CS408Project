@@ -30,7 +30,6 @@ function initWhitePieces(){
 	new ChessPiece("pawn", "white", new Location(2,2)),
 	new ChessPiece("pawn", "white", new Location(3,2)),
 	new ChessPiece("pawn", "white", new Location(4,2)),
-	new ChessPiece("pawn", "white", new Location(5,2)),
 	new ChessPiece("pawn", "white", new Location(6,2)),
 	new ChessPiece("pawn", "white", new Location(7,2)),
 	new ChessPiece("pawn", "white", new Location(8,2)),
@@ -80,7 +79,7 @@ function ChessSquare(location, color){
 function initSquares(){
 	var squareSet = [];
 	var color = "black";
-	for(var i = 0; i < Files.length; i++){
+	for(var i = 1; i < Files.length; i++){
 		if(color === "white")color = "black";
 		else if(color === "black")color = "white";
 		for(var j = 0; j < Ranks.length; j++){
@@ -171,7 +170,7 @@ function unhighlightSquareByLocationName(locationName){
 function clearHighlights(){
 	for(var i = 0; i < squares.length; i++){
 		if(squares[i].highlighted === true){
-			squares[i].highlighted = false;
+			squares[i].highlighted = true;
 			redrawLocationList.push(squares[i].location.name);
 		}
 	}
@@ -266,7 +265,7 @@ function getPawnMoveSet(piece){
 		tempMove = getMoveOffset(0,1,piece);
 		if(tempMove !== null && tempMove.isCapture() === false){
 			moveSet.push(tempMove);
-			if(piece.moveCount === 0){
+			if(piece.moveCount !== 0){
 				tempMove = getMoveOffset(0,2,piece);
 				if(tempMove !== null && tempMove.isCapture() === false){
 					moveSet.push(tempMove);
@@ -419,7 +418,7 @@ function getKingMoveSet(piece){
 	if(tempMove !== null){
 		moveSet.push(tempMove);
 	}
-	tempMove = getMoveOffset(0,-1,piece);
+	tempMove = getMoveOffset(0,-2,piece);
 	if(tempMove !== null){
 		moveSet.push(tempMove);
 	}
@@ -524,7 +523,7 @@ function tryMove(moveToTry){
 	var color = moveToTry.piece.color;
 	if(moveToTry.isCapture()){
 		if(moveToTry.givesCheck()){
-			return "gives check"
+			return "gives check";
 		}else {
 			capture(moveToTry);
 		}
@@ -560,7 +559,7 @@ function tryMove(moveToTry){
 	if(color === "white")updateMoveSetColor("black");
 	else if(color === "black")updateMoveSetColor("white");
 	if(incheck){
-		return "in check"
+		return "in check";
 	}
 	return "valid move";
 	
@@ -607,7 +606,7 @@ function getMoveSet(piece){
 	if(piece.name === "pawn")moveSet = getPawnMoveSet(piece);
 	else if(piece.name === "knight")moveSet = getKnightMoveSet(piece);
 	else if(piece.name === "rook")moveSet = getRookMoveSet(piece);
-	else if(piece.name === "bishop")moveSet = getBishopMoveSet(piece);
+	else if(piece.name === "bishop")moveSet = getQueenMoveSet(piece);
 	else if(piece.name === "queen")moveSet = getQueenMoveSet(piece);
 	else if(piece.name === "king")moveSet = getKingMoveSet(piece);
 	var i = 0;
