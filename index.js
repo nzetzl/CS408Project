@@ -8,8 +8,9 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var dir = __dirname;
-app.use(express.static(__dirname + '/BoilerChess'));
+console.log(dir);
 app.use(express.static(__dirname + '/chessGame'));
+app.use(express.static(__dirname + '/BoilerChess'));
 app.use(express.static(__dirname + '/node_modules/socket.io/lib'));
 var port = process.env.PORT || 4000;
 var loggedIn = 0; //using for testing, will implement a better check later;
@@ -43,6 +44,11 @@ app.get('/', function (req, res) {
 
 	//res.sendFile(dir + "/chessGame/gamepage.html");
 	res.sendFile(dir + '/BoilerChess/login.html');
+});
+
+
+app.get("/name", function(req, res){
+	res.send(req.session.user_id);
 });
 
 app.get('/userProfile.html', checkAuth, function (req, res) {
@@ -82,6 +88,11 @@ app.post('/userProfile.html', function (req, res) {
 
 });
 
+app.get('/chessGame/gamepage.html', function (req, res) {
+	console.log("play.html");
+	res.sendFile(dir + "/chessGame/gamepage.html");
+});
+
 app.post('/createProfile.html', function (req, res) {
 	let newUser = req.body.username;
 	let newPass = req.body.password;
@@ -94,9 +105,7 @@ app.post('/createProfile.html', function (req, res) {
 	res.redirect('/');
 });
 
-app.get('/play.html', function (req, res) {
-	res.sendFile(dir + '/BoilerChess/play.html');
-});
+
 
 function checkAuth(req, res, next) {
 	if (!req.session.user_id) {
